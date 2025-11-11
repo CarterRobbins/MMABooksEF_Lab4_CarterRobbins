@@ -46,7 +46,7 @@ namespace MMABooksTests
             p = dbContext.Products.Find(code);
             Assert.IsNotNull(p);
             Assert.AreEqual(code, p!.ProductCode);
-            Console.WriteLine(p);
+            Console.WriteLine(p); // print the product
         }
 
         [Test]
