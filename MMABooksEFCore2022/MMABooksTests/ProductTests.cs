@@ -53,6 +53,15 @@ namespace MMABooksTests
         public void GetUsingWhere()
         {
             // get a list of all of the products that have a unit price of 56.50
+            products = dbContext.Products
+                    .Where(x => x.UnitPrice == 56.50m)
+                    .OrderBy(x => x.ProductCode)
+                    .ToList();
+
+            Assert.IsNotNull(products);
+            Assert.IsNotEmpty(products);
+            Assert.True(products.All(x => x.UnitPrice == 56.50m));
+            foreach (var row in products) Console.WriteLine(row);
         }
 
         [Test]
@@ -72,6 +81,23 @@ namespace MMABooksTests
         [Test]
         public void DeleteTest()
         {
+            // create a temp product to delete
+            p = new Product
+            {
+                ProductCode = "DL" + Guid.NewGuid().ToString("N").Substring(0, 6).ToUpperInvariant(),
+                Description = "Temp Delete Product",
+                UnitPrice = 1.00m,
+                OnHandQuantity = 1
+            };
+            dbContext.Products.Add(p);
+            dbContext.SaveChanges();
+
+            var code = p.ProductCode;
+
+            dbContext.Products.Remove(p);
+            dbContext.SaveChanges();
+
+            Assert.IsNull(dbContext.Products.Find(code));
 
         }
 
