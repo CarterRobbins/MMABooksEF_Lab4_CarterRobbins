@@ -1,18 +1,20 @@
+using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System;
+using MMABooksEFClasses.Models;
 
-using NUnit.Framework;
-using MMABooksEFClasses.MarisModels;
-using Microsoft.EntityFrameworkCore;
 
 namespace MMABooksTests
 {
     [TestFixture]
     public class ProductTests
     {
-        /*
+        
         MMABooksContext dbContext;
+        Product? p;
+        List<Product> products;
 
         [SetUp]
         public void Setup()
@@ -24,11 +26,27 @@ namespace MMABooksTests
         [Test]
         public void GetAllTest()
         {
+            products = dbContext.Products
+                    .OrderBy(x => x.Description)
+                    .ToList();
+
+            Assert.IsNotNull(products);
+            Assert.Greater(products.Count, 0);
+            foreach (var row in products) Console.WriteLine(row);
         }
 
         [Test]
         public void GetByPrimaryKeyTest()
         {
+            var code = dbContext.Products
+                    .Select(x => x.ProductCode)
+                    .OrderBy(x => x)
+                    .First();
+
+            p = dbContext.Products.Find(code);
+            Assert.IsNotNull(p);
+            Assert.AreEqual(code, p!.ProductCode);
+            Console.WriteLine(p);
         }
 
         [Test]
@@ -68,6 +86,6 @@ namespace MMABooksTests
         {
 
         }
-       */
+       
     }
 }
