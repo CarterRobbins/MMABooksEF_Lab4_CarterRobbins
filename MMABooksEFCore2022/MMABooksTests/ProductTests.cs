@@ -104,13 +104,42 @@ namespace MMABooksTests
         [Test]
         public void CreateTest()
         {
+            p = new Product
+            {
+                ProductCode = "EF" + Guid.NewGuid().ToString("N").Substring(0, 6).ToUpperInvariant(),
+                Description = "EF Temp Product",
+                UnitPrice = 12.34m,
+                OnHandQuantity = 5
+            };
+
+            dbContext.Products.Add(p);
+            dbContext.SaveChanges();
+
+            var created = dbContext.Products.Find(p.ProductCode);
+            Assert.IsNotNull(created);
 
         }
 
         [Test]
         public void UpdateTest()
         {
+            p = dbContext.Products.OrderBy(x => x.ProductCode).First();
+            var originalPrice = p.UnitPrice;
 
+            p.UnitPrice = originalPrice + 1.00m;
+            dbContext.SaveChanges();
+
+            var changed = dbContext.Products.Find(p.ProductCode);
+            Assert.IsNotNull(changed);
+            Assert.AreEqual(originalPrice + 1.00m, changed!.UnitPrice);
+
+            // revert for clean reruns
+            changed.UnitPrice = originalPrice;
+            dbContext.SaveChanges();
+
+            var reverted = dbContext.Products.Find(p.ProductCode);
+            Assert.IsNotNull(reverted);
+            Assert.AreEqual(originalPrice, reverted!.UnitPrice);
         }
        
     }
